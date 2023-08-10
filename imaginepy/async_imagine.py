@@ -22,8 +22,8 @@ class DeviantArt(Enum):
 class AsyncImagine:
 
     def __init__(self, token: str, user_agent: str = "okhttp/4.10.0", restricted: bool = True):
-        self.token = token,
-        self.user_agent = user_agent,
+        self.token = token
+        self.user_agent = user_agent
         self.restricted = restricted
         self.api = "https://api.vyro.ai/v1/imagine/web"
         self.cdn = "https://1966211409.rsc.cdn77.org/appStuff/imagine-fncisndcubnsduigfuds"

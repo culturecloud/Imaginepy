@@ -6,12 +6,12 @@ with open("README.md", "r", encoding="utf-8") as fh:
 setup(
     name='imaginepy',
     version='2.0.1',
-    author='CEED',
+    author='Culture Cloud',
     author_email='',
     description='Python library to create Art with AI.',
     long_description=long_description,
     long_description_content_type="text/markdown",
-    url='https://github.com/ItsCEED/imaginepy',
+    url='https://github.com/culturecloud/imaginepy',
     license="GPL-3.0-only",
     packages=find_packages(),
     keywords=[

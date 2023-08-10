@@ -4,7 +4,7 @@ from imaginepy import AsyncImagine, Style, Ratio, Model, constants
 
 async def main():
     imagine = AsyncImagine()
-    img_data = imagine.sdprem(
+    img_data = imagine.generate(
         prompt="Woman sitting on a table, looking at the sky, seen from behind",
         style=Style.NO_STYLE,
         ratio=Ratio.RATIO_16X9,

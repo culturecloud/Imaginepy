@@ -21,9 +21,11 @@ class DeviantArt(Enum):
 
 class AsyncImagine:
 
-    def __init__(self, restricted: bool = True):
+    def __init__(self, token: str, user_agent: str = "okhttp/4.10.0", restricted: bool = True):
+        self.token = token,
+        self.user_agent = user_agent,
         self.restricted = restricted
-        self.api = "https://inferenceengine.vyro.ai"
+        self.api = "https://api.vyro.ai/v1/imagine/web"
         self.cdn = "https://1966211409.rsc.cdn77.org/appStuff/imagine-fncisndcubnsduigfuds"
         self.version = 1
         self.client = httpx.AsyncClient()
@@ -32,7 +34,11 @@ class AsyncImagine:
         await self.client.aclose()
 
     async def _request(self, **kwargs) -> Response:
-        headers = {"accept": "*/*", "user-agent": "okhttp/4.10.0"}
+        headers = {
+            "accept": "*/*",
+            "user-agent": self.user_agent,
+            "bearer": self.token
+        }
         headers.update(kwargs.get("headers") or {})
 
         data = clear_dict(kwargs.get("data"))
@@ -85,7 +91,7 @@ class AsyncImagine:
 
     async def sdinsp(self, inspiration: Inspiration = Inspiration.INSPIRATION_01) -> bytes:
         """Inspiration"""
-        return await self.sdprem(
+        return await self.generate(
             prompt=inspiration.value[0],
             model=next(
                 (item for item in Model if item.value[0] == inspiration.value[2]), Model.V3),
@@ -104,7 +110,7 @@ class AsyncImagine:
         try:
             response = await self._request(
                 method="POST",
-                url=f"{self.api}/variate",
+                url=f"{self.api}/generations/variations",
                 data={
                     "model_version": self.version,
                     "prompt": prompt + (style.value[3] if style else ""),
@@ -120,7 +126,7 @@ class AsyncImagine:
         except httpx.RequestError as e:
             raise Exception(f"Request failed: {e}")
 
-    async def sdprem(
+    async def generate(
             self,
             prompt: str,
             negative: str = None,
@@ -138,7 +144,7 @@ class AsyncImagine:
         try:
             response = await self._request(
                 method="POST",
-                url=f"{self.api}/sdprem",  # /sdprem (premium), /sd (free)
+                url=f"{self.api}/generations",  # /generations (premium), /sd (free)
                 data={
                     "model_version": self.version,
                     "prompt": prompt + (style.value[3] if style else ""),
@@ -209,7 +215,7 @@ class AsyncImagine:
         except httpx.RequestError as e:
             raise Exception(f"Request failed: {e}")
 
-    async def sdimg(
+    async def inpaint(
             self,
             content: bytes,
             mask: bytes,
@@ -227,7 +233,7 @@ class AsyncImagine:
         try:
             response = await self._request(
                 method="POST",
-                url=f"{self.api}/sdimg",
+                url=f"{self.api}/edits/inpaint",
                 data={
                     "model_version": self.version,
                     "prompt": prompt,
@@ -263,7 +269,7 @@ class AsyncImagine:
         try:
             response = await self._request(
                 method="POST",
-                url=f"{self.api}/controlnet",
+                url=f"{self.api}/edits/remix",
                 data={
                     "model_version": self.version,
                     "prompt": prompt + (style.value[3] if style else ""),

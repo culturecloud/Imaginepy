@@ -6,7 +6,7 @@ from imaginepy import Imagine, Style, Ratio
 def main():
     imagine = Imagine(style=Style.ANIME_V2)
 
-    img_data = imagine.sdprem(
+    img_data = imagine.generate(
         prompt="Woman sitting on a table, looking at the sky, seen from behind",
         style=Style.ANIME_V2,
         ratio=Ratio.RATIO_16X9
@@ -26,7 +26,7 @@ if __name__ == "__main__":
     main()
 ```
 
-#### Parameters for `sdprem` functions
+#### Parameters for `generate` functions
 
 ```
 
